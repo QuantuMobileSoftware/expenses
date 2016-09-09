@@ -3,7 +3,8 @@ from django.contrib.auth.models import User, Group, AbstractUser
 
 
 class Expenses(models.Model):
-    date = models.DateTimeField()
+    date = models.DateField()
+    time = models.TimeField(default='00:00:00')
     text = models.TextField()
     cost = models.FloatField()
     owner = models.ForeignKey("auth.User")

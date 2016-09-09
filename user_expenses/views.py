@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group, User
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework import permissions
+from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer, HTMLFormRenderer
 from permissions import CanManageUsers, CanManageRecords, IsOwner
 
 from models import Expenses
@@ -30,7 +31,10 @@ class ExpensesList(generics.ListCreateAPIView):
         if request.user.is_authenticated():
             if Group.objects.get(name='admin') not in request.user.groups.all():
                 self.queryset = Expenses.objects.filter(owner=request.user)
-            return super(ExpensesList, self).get(request, args, kwargs)
+            if Group.objects.get(name='regular_user') in request.user.groups.all():
+                data = [{'text': el.text, 'date': el.date, 'time': el.time, 'cost': el.cost} for el in self.queryset.all()]
+                return Response({'expenses': data, 'name': request.user.username}, template_name='expenses_list.html')
+            return super(ExpensesList, self).get(request, *args, **kwargs)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
 
@@ -85,6 +89,7 @@ class GroupList(generics.ListCreateAPIView):
 class GroupDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+
 
 
 

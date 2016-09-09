@@ -15,4 +15,3 @@ urlpatterns = [
     url(r'^expenses/(?P<pk>\d+)/$', ExpensesDetail.as_view(), name='expenses-detail'),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
-
