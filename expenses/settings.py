@@ -1,4 +1,5 @@
 import os
+from os.path import abspath, basename, dirname, join, normpath
 
 LOGIN_REDIRECT_URL = '/expenses'
 
@@ -35,11 +36,7 @@ INSTALLED_APPS = (
 
 REST_FRAMEWORK = {
     'PAGINATE_BY': 10,
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.TemplateHTMLRenderer',
-        'user_expenses.renderers.PlainTextRenderer',
-    )
+
 }
 
 MIDDLEWARE_CLASSES = (
@@ -58,7 +55,7 @@ ROOT_URLCONF = 'expenses.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ BASE_DIR, os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [ BASE_DIR, os.path.join(BASE_DIR, 'static')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -106,6 +103,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# DJANGO_ROOT = dirname(dirname(abspath(__file__)))
+#
+# SITE_ROOT = dirname(DJANGO_ROOT)
+#
+# STATIC_ROOT = normpath(join(SITE_ROOT, 'user'))
+#
+# STATICFILES_DIRS = ()
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),

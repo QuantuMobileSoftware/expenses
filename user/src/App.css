@@ -22,3 +22,21 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+table {
+    border-collapse: collapse;
+    margin-left: 3%;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+form {
+  position: fixed;
+  margin-left: 3%;
+}
+
+.expensesForm {
+    display: block;
+}

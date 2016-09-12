@@ -32,8 +32,8 @@ class ExpensesList(generics.ListCreateAPIView):
             if Group.objects.get(name='admin') not in request.user.groups.all():
                 self.queryset = Expenses.objects.filter(owner=request.user)
             if Group.objects.get(name='regular_user') in request.user.groups.all():
-                data = [{'text': el.text, 'date': el.date, 'time': el.time, 'cost': el.cost} for el in self.queryset.all()]
-                return Response({'expenses': data, 'name': request.user.username}, template_name='expenses_list.html')
+                data = [{'text': el.text, 'date': el.date, 'time': el.time, 'cost': el.cost, 'id': el.id} for el in self.queryset.all()]
+                return Response(data=data)
             return super(ExpensesList, self).get(request, *args, **kwargs)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
