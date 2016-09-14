@@ -60,6 +60,11 @@ var ExpensesList = React.createClass({
     },
     render: function() {
         var that = this;
+        console.log(this.props.data);
+        if (this.props.data.length === 1)
+        {
+            this.props.data = [ this.props.data ];
+        }
         var expenseNodes = this.props.data.map(function(expense) {
             return (
             <Expense date={expense.date} time={expense.time} cost={expense.cost} id={expense.id} onDelete={that.handleExpenseRemove} onEdit={that.handleExpenseEdit}>
@@ -114,15 +119,15 @@ var ExpensesFilterForm = React.createClass({
         var dateto = this.state.dateto;
         var timefrom = this.state.timefrom;
         var timeto = this.state.timeto;
-        // if (!text || !datefrom || !dateto || !timefrom || !timeto) {
-        //   return;
-        // }
+        if (!text || !datefrom || !dateto || !timefrom || !timeto) {
+          return;
+        }
         this.props.onExpensesFilter({datefrom: datefrom, dateto: dateto, timefrom: timefrom, timeto: timeto, text: text});
         this.setState({datefrom: '', dateto: '', timefrom: '', timeto: '', text: ''});
     },
     render: function() {
         return (
-          <form className="expensesFilterForm" onclick={this.handleFilter}>
+          <form className="expensesFilterForm" >
               <br/>
               <input type="date"
                    placeholder="DateFrom"
@@ -149,7 +154,7 @@ var ExpensesFilterForm = React.createClass({
                    value={this.state.text}
                    onChange={this.handleTextChange}/>
               <br/>
-              <input type="button" value="Filter" />
+              <input type="button" value="Filter" onClick={this.handleFilter}/>
           </form>
     );
   }
@@ -228,32 +233,30 @@ var ExpensesBox = React.createClass({
         });
       },
     handleExpensesFilter: function(filter) {
-        var new_data = this.state.data.pop();
-        var elength = this.state.data.length;
-        // for(var i = 0; i < elength; i++) {
-        //     if (new_data[i].date >= filter.datefrom && new_data[i].date <= filter.dateto && new_data[i].time >= filter.timefrom && new_data[i].time <= filter.timeto && new_data[i].text.search(filter.text) !== -1)
-        //     {
-        //         new_data.splice(index, 1);
-        //         i--;
-        //     }
-        // }
-        // new_data.splice(1, 1);
-        var that = this;
-        console.log("Filtered data");
+        var new_data = this.state.data;
+        var index = -1;
+        var data = [];
+        console.log('new data');
         console.log(new_data);
+        var elength = this.state.data.length;
+        for(var i = 0; i < elength; i++) {
+            console.log(new_data[i]);
+            if (new_data[i].date >= filter.datefrom && new_data[i].date <= filter.dateto && new_data[i].time >= filter.timefrom && new_data[i].time <= filter.timeto && new_data[i].text.search(filter.text) !== -1)
+            {
+                data.push(new_data[i]);
+            }
+        }
+        this.setState({data: data});
         $.ajax({
           url: this.props.url,
-            type: 'GET',
           dataType: 'json',
           success: function(data) {
-              that.setState({data: new_data});
-              console.log(new_data);
+              console.log(data);
           },
           error: function(xhr, status, err) {
               console.log(xhr);
           }
         });
-
     },
     handleExpenseEdit: function(expense) {
         var that = this;

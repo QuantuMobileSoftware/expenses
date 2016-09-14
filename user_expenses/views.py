@@ -28,6 +28,7 @@ class ExpensesList(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
     def get(self, request, *args, **kwargs):
+        # import pdb; pdb.set_trace()
         if request.user.is_authenticated():
             if Group.objects.get(name='admin') not in request.user.groups.all():
                 self.queryset = Expenses.objects.filter(owner=request.user)
