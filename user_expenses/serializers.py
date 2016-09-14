@@ -29,5 +29,5 @@ class GroupSerializer(serializers.ModelSerializer):
 class ExpensesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expenses
-        fields = ('id', 'date', 'text', 'cost')
+        fields = ('id', 'date', 'time', 'text', 'cost')
 

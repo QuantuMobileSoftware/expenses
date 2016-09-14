@@ -4,12 +4,12 @@ from models import Expenses
 
 
 class ExpensesFilter(filters.FilterSet):
-    date = django_filters.DateTimeFromToRangeFilter(name='date')
-    cost = django_filters.NumberFilter(name='cost')
+    date = django_filters.DateRangeFilter(name='date')
+    time = django_filters.TimeRangeFilter(name='time')
     text = django_filters.CharFilter(name='text', lookup_expr='icontains')
 
     class Meta:
         model = Expenses
-        fields = ['date', 'text', 'cost']
+        fields = ('date', 'time', 'text')
 
 

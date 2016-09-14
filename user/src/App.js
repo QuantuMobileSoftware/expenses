@@ -13,16 +13,39 @@ function readCookie(name) {
             return null;
         }
 
-
 var Expense = React.createClass({
-  render: function() {
+    editExpense: function(expense) {
+        this.props.onEdit(expense);
+        return false;
+    },
+    handleDateChange: function(e) {
+        this.setState({date: e.target.value});
+        this.editExpense({text: this.props.text, date: e.target.value, time: this.props.time, cost: this.props.cost, id: this.props.id});
+    },
+    handleTimeChange: function(e) {
+        this.setState({time: e.target.value});
+        this.editExpense({text: this.props.text, date: this.props.date, time: e.target.value, cost: this.props.cost, id: this.props.id});
+    },
+    handleTextChange: function(e) {
+        this.setState({text: e.target.value});
+        this.editExpense({text: e.target.value, date: this.props.date, time: this.props.time, cost: this.props.cost, id: this.props.id});
+    },
+    handleCostChange: function(e) {
+        this.setState({cost: e.target.value});
+        this.editExpense({text: this.props.text, date: this.props.date, time: this.props.time, cost: e.target.value, id: this.props.id});
+    },
+    handleExpenseRemove: function() {
+          this.props.onDelete({id: this.props.id, date: this.props.date, time: this.props.time, text: this.props.text, cost: this.props.cost});
+          return false;
+        },
+    render: function() {
     return (
          <tr>
-             <td>{ this.props.date }</td>
-             <td>{ this.props.time }</td>
-             <td>{ this.props.children }</td>
-             <td>{ this.props.cost }</td>
-             <td> <input type="button"  className="btn btn-primary" value="Remove" onClick={this.props.onDelete({id: this.props.id, date: this.props.date, time: this.props.time, text: this.props.text, cost: this.props.cost})}/> </td>
+             <td><input type="date" value={this.props.date} onChange={this.handleDateChange}/></td>
+             <td><input type="time" value={this.props.time} onChange={this.handleTimeChange}/></td>
+             <td><input type="text" value={this.props.children} onChange={this.handleTextChange}/></td>
+             <td><input type="number" value={this.props.cost} onChange={this.handleCostChange}/></td>
+             <td><input type="button" value="Remove" onClick={this.handleExpenseRemove}/></td>
         </tr>
     );
   }
@@ -30,18 +53,16 @@ var Expense = React.createClass({
 
 var ExpensesList = React.createClass({
     handleExpenseRemove: function(e) {
-        // var text = this.state.text.trim();
-        // var date = this.state.date;
-        // var time = this.state.time;
-        // var cost = this.state.cost;
-        // var id = this.state.id;
         this.props.onExpenseDelete(e);
+    },
+    handleExpenseEdit: function(e) {
+        this.props.onExpenseEdit(e);
     },
     render: function() {
         var that = this;
         var expenseNodes = this.props.data.map(function(expense) {
             return (
-            <Expense date={expense.date} time={expense.time} cost={expense.cost} id={expense.id} onDelete={that.handleExpenseRemove}>
+            <Expense date={expense.date} time={expense.time} cost={expense.cost} id={expense.id} onDelete={that.handleExpenseRemove} onEdit={that.handleExpenseEdit}>
               {expense.text}
             </Expense>
           )
@@ -68,6 +89,71 @@ var ExpensesList = React.createClass({
       }
 });
 
+var ExpensesFilterForm = React.createClass({
+    getInitialState: function() {
+        return {datefrom: '', dateto: '', timefrom: '', timeto: '', text: ''};
+    },
+    handleDateFromChange: function(e) {
+        this.setState({datefrom: e.target.value});
+    },
+    handleDateToChange: function(e) {
+        this.setState({dateto: e.target.value});
+    },
+    handleTimeFromChange: function(e) {
+        this.setState({timefrom: e.target.value});
+    },
+    handleTimeToChange: function(e) {
+        this.setState({timeto: e.target.value});
+    },
+    handleTextChange: function(e) {
+        this.setState({text: e.target.value});
+    },
+    handleFilter: function(e){
+        var text = this.state.text;
+        var datefrom = this.state.datefrom;
+        var dateto = this.state.dateto;
+        var timefrom = this.state.timefrom;
+        var timeto = this.state.timeto;
+        // if (!text || !datefrom || !dateto || !timefrom || !timeto) {
+        //   return;
+        // }
+        this.props.onExpensesFilter({datefrom: datefrom, dateto: dateto, timefrom: timefrom, timeto: timeto, text: text});
+        this.setState({datefrom: '', dateto: '', timefrom: '', timeto: '', text: ''});
+    },
+    render: function() {
+        return (
+          <form className="expensesFilterForm" onclick={this.handleFilter}>
+              <br/>
+              <input type="date"
+                   placeholder="DateFrom"
+                   value={this.state.datefrom}
+                   onChange={this.handleDateFromChange}/>
+              <br/>
+              <input type="date"
+                   placeholder="DateTo"
+                   value={this.state.dateto}
+                   onChange={this.handleDateToChange}/>
+              <br/>
+              <input type="time"
+                   placeholder="TimeFrom"
+                   value={this.state.timefrom}
+                   onChange={this.handleTimeFromChange}/>
+              <br/>
+              <input type="time"
+                   placeholder="TimeTo"
+                   value={this.state.timeto}
+                   onChange={this.handleTimeToChange}/>
+              <br/>
+              <input type="text"
+                   placeholder="Your text"
+                   value={this.state.text}
+                   onChange={this.handleTextChange}/>
+              <br/>
+              <input type="button" value="Filter" />
+          </form>
+    );
+  }
+});
 
 var ExpensesForm = React.createClass({
     getInitialState: function() {
@@ -95,7 +181,7 @@ var ExpensesForm = React.createClass({
           return;
         }
         this.props.onExpenseSubmit({date: date, time: time, text: text, cost: cost});
-        this.setState({date: '', time: '', text: '', cost: 0});
+        this.setState({date: '', time: '', text: '', cost: ''});
     },
     render: function() {
         return (
@@ -121,7 +207,7 @@ var ExpensesForm = React.createClass({
                    value={this.state.cost}
                    onChange={this.handleCostChange}/>
               <br/>
-              <input type="submit" value="Post" />
+              <input type="submit" value="Save" />
           </form>
     );
   }
@@ -130,7 +216,7 @@ var ExpensesForm = React.createClass({
 var ExpensesBox = React.createClass({
     loadExpensesFromServer: function() {
         $.ajax({
-          url: "/expenses/",
+          url: this.props.url,
           dataType: 'json',
           cache: false,
           success: function(data) {
@@ -141,8 +227,68 @@ var ExpensesBox = React.createClass({
           }
         });
       },
+    handleExpensesFilter: function(filter) {
+        var new_data = this.state.data.pop();
+        var elength = this.state.data.length;
+        // for(var i = 0; i < elength; i++) {
+        //     if (new_data[i].date >= filter.datefrom && new_data[i].date <= filter.dateto && new_data[i].time >= filter.timefrom && new_data[i].time <= filter.timeto && new_data[i].text.search(filter.text) !== -1)
+        //     {
+        //         new_data.splice(index, 1);
+        //         i--;
+        //     }
+        // }
+        // new_data.splice(1, 1);
+        var that = this;
+        console.log("Filtered data");
+        console.log(new_data);
+        $.ajax({
+          url: this.props.url,
+            type: 'GET',
+          dataType: 'json',
+          success: function(data) {
+              that.setState({data: new_data});
+              console.log(new_data);
+          },
+          error: function(xhr, status, err) {
+              console.log(xhr);
+          }
+        });
+
+    },
+    handleExpenseEdit: function(expense) {
+        var that = this;
+        $.ajax({
+            url: this.props.url+expense.id+'/',
+            dataType: 'json',
+            type: 'PATCH',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRFToken', readCookie('csrftoken'));
+            },
+            data: expense,
+            success: function(data) {
+                console.log(data);
+                var new_data = that.state.data;
+                var elength = that.state.data.length;
+                for(var i = 0; i < elength; i++) {
+                    if (that.state.data[i].id === data.id) {
+                        new_data[i].text = data.text;
+                        new_data[i].time = data.time;
+                        new_data[i].date = data.date;
+                        new_data[i].cost = data.cost;
+                        break;
+                    }
+                }
+                that.setState({data: new_data});
+            },
+            error: function(xhr, status, err) {
+              console.log(xhr);
+          }
+        });
+    },
     handleExpenseSubmit: function(expense) {
         var expenses = this.state.data;
+        var that = this;
+        // this.setState({data: expenses.concat(expense)});
         $.ajax({
             url: this.props.url,
             dataType: 'json',
@@ -152,7 +298,7 @@ var ExpensesBox = React.createClass({
             },
             data: expense,
             success: function(data) {
-                this.setState({data: expenses.concat(data)});
+                that.setState({data: expenses.concat(data)});
             },
             error: function(xhr, status, err) {
               console.log(xhr);
@@ -169,7 +315,8 @@ var ExpensesBox = React.createClass({
               }
           }
           var data = this.state.data[index];
-          this.state.data.splice(index, 1);
+          var that = this;
+
           $.ajax({
             url: this.props.url+expense.id+'/',
             dataType: 'json',
@@ -179,10 +326,11 @@ var ExpensesBox = React.createClass({
             type: 'DELETE',
             data: data,
             success: function(data) {
-                this.setState({data: this.state.data});
+                that.state.data.splice(index, 1);
+                that.setState({data: that.state.data});
             },
             error: function(xhr, status, err) {
-              console.log(xhr);
+                console.log(xhr);
           }
         });
     },
@@ -199,8 +347,9 @@ var ExpensesBox = React.createClass({
                <h1>Expenses</h1>
            </div>
           <div className="App-intro">
-              <ExpensesList data={ this.state.data } onExpenseDelete={this.handleExpenseRemove.bind(this)}/>
-              <ExpensesForm onExpenseSubmit={this.handleExpenseSubmit.bind(this)} />
+              <ExpensesList data={ this.state.data } onExpenseDelete={this.handleExpenseRemove} onExpenseEdit={this.handleExpenseEdit}/>
+              <ExpensesForm onExpenseSubmit={this.handleExpenseSubmit} />
+              <ExpensesFilterForm onExpensesFilter={this.handleExpensesFilter} />
           </div>
       </div>
     );

@@ -40,3 +40,8 @@ form {
 .expensesForm {
     display: block;
 }
+
+.expensesFilterForm {
+    display: block;
+    margin-left: 30%;
+}
