@@ -218,6 +218,26 @@ var ExpensesForm = React.createClass({
   }
 });
 
+var ExpensesLimit = React.createClass({
+    getInitialState: function() {
+        return {limit: ''};
+    },
+    handleLimitChange: function(e)
+    {
+        this.setState({limit: e.target.value});
+    },
+    render: function()
+    {
+        return (
+            <div className={this.props.onLimit({limit: this.state.limit})}>
+            Limit
+            <br/>
+            <input type="number" placeholder="Limit" value={ this.state.limit } onChange={this.handleLimitChange} />
+            </div>
+        );
+    }
+});
+
 var ExpensesBox = React.createClass({
     loadExpensesFromServer: function() {
         $.ajax({
@@ -232,6 +252,29 @@ var ExpensesBox = React.createClass({
           }
         });
       },
+    handleLimit: function(limit) {
+        var date = new Date(Date.now());
+        var sum = 0;
+        var elength = this.state.data.length;
+        for (var i = 0; i < elength; i++)
+        {
+            var old_date = new Date(this.state.data[i].date);
+            if (old_date.toLocaleDateString() === date.toLocaleDateString())
+            {
+                console.log(old_date);
+                sum += this.state.data[i].cost;
+            }
+        }
+        var limit = limit.limit;
+        if (!limit) {
+            return 'empty';
+        }
+        else if (sum <= limit)
+        {
+            return 'isLess';
+        }
+        return 'isGreater';
+    },
     handleExpensesFilter: function(filter) {
         var new_data = this.state.data;
         var index = -1;
@@ -259,7 +302,6 @@ var ExpensesBox = React.createClass({
         });
     },
     handleExpenseEdit: function(expense) {
-        var that = this;
         $.ajax({
             url: this.props.url+expense.id+'/',
             dataType: 'json',
@@ -353,6 +395,7 @@ var ExpensesBox = React.createClass({
               <ExpensesList data={ this.state.data } onExpenseDelete={this.handleExpenseRemove} onExpenseEdit={this.handleExpenseEdit}/>
               <ExpensesForm onExpenseSubmit={this.handleExpenseSubmit} />
               <ExpensesFilterForm onExpensesFilter={this.handleExpensesFilter} />
+              <ExpensesLimit onLimit={ this.handleLimit } />
           </div>
       </div>
     );

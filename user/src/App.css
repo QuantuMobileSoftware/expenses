@@ -45,3 +45,18 @@ form {
     display: block;
     margin-left: 30%;
 }
+
+.isGreater {
+    margin-left: 50%;
+    color: orangered;
+}
+
+.isLess {
+    margin-left: 50%;
+    color: greenyellow;
+}
+
+.empty {
+    margin-left: 50%;
+    color: black;
+}
