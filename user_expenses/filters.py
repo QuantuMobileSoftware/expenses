@@ -13,3 +13,5 @@ class ExpensesFilter(filters.FilterSet):
         fields = ('date', 'time', 'text')
 
 
+
+

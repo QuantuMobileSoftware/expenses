@@ -7,35 +7,45 @@ function readCookie(name) {
             var ca = document.cookie.split(';');
             for (var i = 0; i < ca.length; i++) {
                 var c = ca[i];
-                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
             }
             return null;
         }
 
 var Expense = React.createClass({
-    editExpense: function(expense) {
-        this.props.onEdit(expense);
-        return false;
-    },
+    // getInitialState: function () {
+    //     return {date: this.props.date, time: this.props.time, cost: this.props.cost, text: this.props.children, id: this.props.id};
+    // },
     handleDateChange: function(e) {
         this.setState({date: e.target.value});
-        this.editExpense({text: this.props.text, date: e.target.value, time: this.props.time, cost: this.props.cost, id: this.props.id});
+        // this.editExpense({text: this.props.text, date: e.target.value, time: this.props.time, cost: this.props.cost, id: this.props.id});
     },
     handleTimeChange: function(e) {
         this.setState({time: e.target.value});
-        this.editExpense({text: this.props.text, date: this.props.date, time: e.target.value, cost: this.props.cost, id: this.props.id});
+        // this.editExpense({text: this.props.text, date: this.props.date, time: e.target.value, cost: this.props.cost, id: this.props.id});
     },
     handleTextChange: function(e) {
         this.setState({text: e.target.value});
-        this.editExpense({text: e.target.value, date: this.props.date, time: this.props.time, cost: this.props.cost, id: this.props.id});
+        // this.editExpense({text: e.target.value, date: this.props.date, time: this.props.time, cost: this.props.cost, id: this.props.id});
     },
     handleCostChange: function(e) {
+        // console.log(e.target.value)
+        // this.state.cost = e.target.value;
+        // this.setState(this.state);
         this.setState({cost: e.target.value});
-        this.editExpense({text: this.props.text, date: this.props.date, time: this.props.time, cost: e.target.value, id: this.props.id});
+        // console.log(this.state);
+        // this.editExpense({text: this.props.text, date: this.props.date, time: this.props.time, cost: e.target.value, id: this.props.id});
+    },
+    handleExpenseEdit: function()
+    {
+        var clean = pruneEmpty(this.state);
+        console.log(JSON.stringify(clean, undefined, 2));
+        this.props.onEdit({text: this.state.text, date: this.state.text, time: this.state.time, cost: this.state.cost, id: this.state.id});
+        return false;
     },
     handleExpenseRemove: function() {
-          this.props.onDelete({id: this.props.id, date: this.props.date, time: this.props.time, text: this.props.text, cost: this.props.cost});
+          this.props.onDelete({id: this.props.id, date: this.props.date, time: this.props.time, text: this.props.children, cost: this.props.cost});
           return false;
         },
     render: function() {
@@ -46,6 +56,7 @@ var Expense = React.createClass({
              <td><input type="text" value={this.props.children} onChange={this.handleTextChange}/></td>
              <td><input type="number" value={this.props.cost} onChange={this.handleCostChange}/></td>
              <td><input type="button" value="Remove" onClick={this.handleExpenseRemove}/></td>
+             <td><input type="button" value="Edit" onClick={this.handleExpenseEdit}/></td>
         </tr>
     );
   }
@@ -60,14 +71,13 @@ var ExpensesList = React.createClass({
     },
     render: function() {
         var that = this;
-        console.log(this.props.data);
         if (this.props.data.length === 1)
         {
             this.props.data = [ this.props.data ];
         }
         var expenseNodes = this.props.data.map(function(expense) {
             return (
-            <Expense date={expense.date} time={expense.time} cost={expense.cost} id={expense.id} onDelete={that.handleExpenseRemove} onEdit={that.handleExpenseEdit}>
+            <Expense date={expense.date} time={expense.time} cost={expense.cost} id={expense.id} key={expense.id} onDelete={that.handleExpenseRemove} onEdit={that.handleExpenseEdit}>
               {expense.text}
             </Expense>
           )
@@ -75,7 +85,7 @@ var ExpensesList = React.createClass({
         return (
           <div className="expensesList">
               <br/>
-              <table>
+              <table className="table table-striped">
                   <thead>
                     <tr>
                         <th>Date</th>
@@ -127,29 +137,34 @@ var ExpensesFilterForm = React.createClass({
     },
     render: function() {
         return (
-          <form className="expensesFilterForm" >
+          <form className="form-inline" >
               <br/>
               <input type="date"
+                     className="form-control"
                    placeholder="DateFrom"
                    value={this.state.datefrom}
                    onChange={this.handleDateFromChange}/>
               <br/>
               <input type="date"
+                     className="form-control"
                    placeholder="DateTo"
                    value={this.state.dateto}
                    onChange={this.handleDateToChange}/>
               <br/>
               <input type="time"
+                     className="form-control"
                    placeholder="TimeFrom"
                    value={this.state.timefrom}
                    onChange={this.handleTimeFromChange}/>
               <br/>
               <input type="time"
+                     className="form-control"
                    placeholder="TimeTo"
                    value={this.state.timeto}
                    onChange={this.handleTimeToChange}/>
               <br/>
               <input type="text"
+                     className="form-control"
                    placeholder="Your text"
                    value={this.state.text}
                    onChange={this.handleTextChange}/>
@@ -190,24 +205,28 @@ var ExpensesForm = React.createClass({
     },
     render: function() {
         return (
-          <form className="expensesForm" onSubmit={this.handleSubmit} >
+          <form className="form-inline" onSubmit={this.handleSubmit} >
               <br/>
               <input type="date"
+                     className="form-control"
                    placeholder="Date"
                    value={this.state.date}
                    onChange={this.handleDateChange}/>
               <br/>
               <input type="time"
+                     className="form-control"
                    placeholder="Time"
                    value={this.state.time}
                    onChange={this.handleTimeChange}/>
               <br/>
               <input type="text"
+                     className="form-control"
                    placeholder="Say something..."
                    value={this.state.text}
                    onChange={this.handleTextChange}/>
               <br/>
               <input type="number"
+                     className="form-control"
                    placeholder="Cost"
                    value={this.state.cost}
                    onChange={this.handleCostChange}/>
@@ -261,7 +280,6 @@ var ExpensesBox = React.createClass({
             var old_date = new Date(this.state.data[i].date);
             if (old_date.toLocaleDateString() === date.toLocaleDateString())
             {
-                console.log(old_date);
                 sum += this.state.data[i].cost;
             }
         }
@@ -277,14 +295,12 @@ var ExpensesBox = React.createClass({
     },
     handleExpensesFilter: function(filter) {
         var new_data = this.state.data;
-        var index = -1;
         var data = [];
-        console.log('new data');
-        console.log(new_data);
         var elength = this.state.data.length;
         for(var i = 0; i < elength; i++) {
-            console.log(new_data[i]);
-            if (new_data[i].date >= filter.datefrom && new_data[i].date <= filter.dateto && new_data[i].time >= filter.timefrom && new_data[i].time <= filter.timeto && new_data[i].text.search(filter.text) !== -1)
+            if (new_data[i].date >= filter.datefrom && new_data[i].date <= filter.dateto &&
+                new_data[i].time >= filter.timefrom && new_data[i].time <= filter.timeto &&
+                new_data[i].text.search(filter.text) !== -1)
             {
                 data.push(new_data[i]);
             }
@@ -302,6 +318,7 @@ var ExpensesBox = React.createClass({
         });
     },
     handleExpenseEdit: function(expense) {
+        var that = this;
         $.ajax({
             url: this.props.url+expense.id+'/',
             dataType: 'json',
@@ -311,7 +328,6 @@ var ExpensesBox = React.createClass({
             },
             data: expense,
             success: function(data) {
-                console.log(data);
                 var new_data = that.state.data;
                 var elength = that.state.data.length;
                 for(var i = 0; i < elength; i++) {
@@ -387,15 +403,23 @@ var ExpensesBox = React.createClass({
       },
     render: function() {
     return (
-      <div className="App">
-           <div className="App-header">
+      <div className="container">
+           <div className="container">
                <h1>Expenses</h1>
            </div>
-          <div className="App-intro">
+          <div className="container">
               <ExpensesList data={ this.state.data } onExpenseDelete={this.handleExpenseRemove} onExpenseEdit={this.handleExpenseEdit}/>
+              <div className="row">
+                  <div className="col-sm-4">
               <ExpensesForm onExpenseSubmit={this.handleExpenseSubmit} />
+                      </div>
+                  <div className="col-sm-4">
               <ExpensesFilterForm onExpensesFilter={this.handleExpensesFilter} />
+                      </div>
+                  <div className="col-sm-4">
               <ExpensesLimit onLimit={ this.handleLimit } />
+                      </div>
+                  </div>
           </div>
       </div>
     );

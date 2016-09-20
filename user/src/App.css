@@ -23,28 +23,28 @@
   to { transform: rotate(360deg); }
 }
 
-table {
-    border-collapse: collapse;
-    margin-left: 3%;
-}
+/*table {*/
+    /*border-collapse: collapse;*/
+    /*margin-left: 3%;*/
+/*}*/
 
-table, th, td {
-    border: 1px solid black;
-}
+/*table, th, td {*/
+    /*border: 1px solid black;*/
+/*}*/
 
-form {
-  position: fixed;
-  margin-left: 3%;
-}
+/*form {*/
+  /*position: fixed;*/
+  /*margin-left: 3%;*/
+/*}*/
 
-.expensesForm {
-    display: block;
-}
+/*.expensesForm {*/
+    /*display: block;*/
+/*}*/
 
-.expensesFilterForm {
-    display: block;
-    margin-left: 30%;
-}
+/*.expensesFilterForm {*/
+    /*display: block;*/
+    /*margin-left: 30%;*/
+/*}*/
 
 .isGreater {
     margin-left: 50%;
