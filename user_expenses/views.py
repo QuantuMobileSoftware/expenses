@@ -45,13 +45,19 @@ class ExpensesDetail(generics.RetrieveUpdateDestroyAPIView):
 class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [CanManageUsers, permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, CanManageUsers]
+
+    def get_queryset(self):
+        reg_user = Group.objects.filter(name='regular_user')
+        if list(reg_user) == list(self.request.user.groups.all()):
+            return User.objects.filter(id=self.request.user.id)
+        return User.objects.all()
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [CanManageUsers, permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, CanManageUsers]
 
 
 class GroupList(generics.ListCreateAPIView):

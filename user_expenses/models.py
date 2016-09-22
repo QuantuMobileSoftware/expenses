@@ -7,6 +7,3 @@ class Expenses(models.Model):
     text = models.TextField()
     cost = models.FloatField()
     owner = models.ForeignKey("auth.User")
-
-    def save(self, *args, **kwargs):
-        super(Expenses, self).save(*args, **kwargs)

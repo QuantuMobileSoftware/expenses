@@ -1,7 +1,7 @@
 import os
 from os.path import abspath, basename, dirname, join, normpath
 
-LOGIN_REDIRECT_URL = '/expenses'
+LOGIN_REDIRECT_URL = '/api/expenses'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -84,8 +84,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+STATIC_ROOT = './static/'
 
 

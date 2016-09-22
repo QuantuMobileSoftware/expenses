@@ -1,3 +1,4 @@
+import re
 from rest_framework import permissions
 from serializers import Group
 
@@ -22,15 +23,21 @@ class CanManageUsers(permissions.BasePermission):
         admin = Group.objects.get(name='admin')
         if admin in request.user.groups.all():
             return True
-        if user_manager in request.user.groups.all():
-            if 'groups' in request.data.keys():
-                group_ids = [el.id for el in request.user.groups.all()]
-                group_ids.sort()
-                request.data['groups'].sort()
-                if request.method == 'POST' or (request.method in ['PATCH', 'PUT'] and request.data['groups'] != group_ids):
+        elif re.findall(r'/users/\d+/', request.path):
+            if user_manager not in request.user.groups.all():
+                if request.user.id != int(re.findall(r'\d+', request.path)[0]):
                     return False
-            return True
-        return False
+            if 'groups' in request.data.keys():
+                    group_ids = [el.id for el in request.user.groups.all()]
+                    group_ids.sort()
+                    request.data['groups'].sort()
+                    if request.data['groups'] != group_ids:
+                        return False
+        else:
+            if request.method == 'POST':
+                if user_manager not in request.user.groups.all():
+                    return False
+        return True
 
 
 class CanManageGroups(permissions.BasePermission):
@@ -39,8 +46,6 @@ class CanManageGroups(permissions.BasePermission):
         if admin in request.user.groups.all():
             return True
         return False
-
-
 
 
 

@@ -14,34 +14,32 @@ function readCookie(name) {
         }
 
 var Expense = React.createClass({
-    // getInitialState: function () {
-    //     return {date: this.props.date, time: this.props.time, cost: this.props.cost, text: this.props.children, id: this.props.id};
-    // },
     handleDateChange: function(e) {
-        this.setState({date: e.target.value});
+        // this.setState({date: e.target.value});
+        this.handleExpenseEdit({text: this.props.text, date: e.target.value, time: this.props.time, cost: this.props.cost, id: this.props.id});
         // this.editExpense({text: this.props.text, date: e.target.value, time: this.props.time, cost: this.props.cost, id: this.props.id});
     },
     handleTimeChange: function(e) {
-        this.setState({time: e.target.value});
+        this.handleExpenseEdit({text: this.props.text, date: this.props.date, time: e.target.value, cost: this.props.cost, id: this.props.id});
+        // this.setState({time: e.target.value});
         // this.editExpense({text: this.props.text, date: this.props.date, time: e.target.value, cost: this.props.cost, id: this.props.id});
     },
     handleTextChange: function(e) {
-        this.setState({text: e.target.value});
+        this.handleExpenseEdit({text: e.target.value, date: this.props.date, time: this.props.time, cost: this.props.cost, id: this.props.id});
         // this.editExpense({text: e.target.value, date: this.props.date, time: this.props.time, cost: this.props.cost, id: this.props.id});
     },
     handleCostChange: function(e) {
         // console.log(e.target.value)
         // this.state.cost = e.target.value;
         // this.setState(this.state);
-        this.setState({cost: e.target.value});
+        this.handleExpenseEdit({text: this.props.text, date: this.props.date, time: this.props.time, cost: e.target.value, id: this.props.id});
+        // this.setState({cost: e.target.value});
         // console.log(this.state);
         // this.editExpense({text: this.props.text, date: this.props.date, time: this.props.time, cost: e.target.value, id: this.props.id});
     },
-    handleExpenseEdit: function()
+    handleExpenseEdit: function(expense)
     {
-        var clean = pruneEmpty(this.state);
-        console.log(JSON.stringify(clean, undefined, 2));
-        this.props.onEdit({text: this.state.text, date: this.state.text, time: this.state.time, cost: this.state.cost, id: this.state.id});
+        this.props.onEdit(expense);
         return false;
     },
     handleExpenseRemove: function() {
@@ -56,7 +54,7 @@ var Expense = React.createClass({
              <td><input type="text" value={this.props.children} onChange={this.handleTextChange}/></td>
              <td><input type="number" value={this.props.cost} onChange={this.handleCostChange}/></td>
              <td><input type="button" value="Remove" onClick={this.handleExpenseRemove}/></td>
-             <td><input type="button" value="Edit" onClick={this.handleExpenseEdit}/></td>
+
         </tr>
     );
   }
