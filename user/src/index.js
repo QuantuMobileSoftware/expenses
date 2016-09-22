@@ -4,6 +4,6 @@ import ExpensesBox from './App';
 import './index.css';
 
 ReactDOM.render(
-  <ExpensesBox url="/expenses/" />,
+  <ExpensesBox url="/api/expenses/" />,
   document.getElementById('root')
 );

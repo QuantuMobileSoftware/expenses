@@ -69,10 +69,6 @@ var ExpensesList = React.createClass({
     },
     render: function() {
         var that = this;
-        if (this.props.data.length === 1)
-        {
-            this.props.data = [ this.props.data ];
-        }
         var expenseNodes = this.props.data.map(function(expense) {
             return (
             <Expense date={expense.date} time={expense.time} cost={expense.cost} id={expense.id} key={expense.id} onDelete={that.handleExpenseRemove} onEdit={that.handleExpenseEdit}>
@@ -249,7 +245,7 @@ var ExpensesLimit = React.createClass({
             <div className={this.props.onLimit({limit: this.state.limit})}>
             Limit
             <br/>
-            <input type="number" placeholder="Limit" value={ this.state.limit } onChange={this.handleLimitChange} />
+            <input type="number" className="form-control" value={ this.state.limit } onChange={this.handleLimitChange} />
             </div>
         );
     }

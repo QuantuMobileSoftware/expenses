@@ -30,25 +30,27 @@ class ExpensesTests(APITestCase):
         response = self.client.post('/api/expenses/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-#
-# class SeleniumTest(APITestCase):
-#     def setUp(self):
-#         admin = User.objects.create(username='admin', password='admin')
-#         admin.save()
-#         self.admin = admin
-#         self.driver = webdriver.Chrome()
-#
-#     def test(self):
-#         self.driver.get("http://localhost:8000/api-auth/login")
-#         element = WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.ID, 'id_username')))
-#         self.driver.find_element_by_id('id_username').send_keys(self.admin.username)
-#         self.driver.find_element_by_id('id_password').send_keys(self.admin.password)
-#         self.driver.find_element_by_id('submit-id-submit').click()
-#         self.driver.get("http://localhost:8000/static/index.html")
-#         element = WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div[1]')))
-#
-#     def tearDown(self):
-#         self.driver.close()
 
+class SeleniumTest(APITestCase):
+    def setUp(self):
+        admin = User.objects.create(username='admin', password='ieTh5lie')
+        admin.save()
+        self.admin = admin
+        self.driver = webdriver.Chrome()
 
+    def test(self):
+        self.driver.get("http://localhost:9000/api/login")
+        element = WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.ID, 'id_username')))
+        self.driver.find_element_by_id('id_username').send_keys(self.admin.username)
+        self.driver.find_element_by_id('id_password').send_keys(self.admin.password)
+        self.driver.find_element_by_id('submit-id-submit').click()
+        self.driver.get("http://localhost:3000")
+        element = WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div[1]')))
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[1]').send_keys('01.01.2016')
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[2]').send_keys('00:00')
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[3]').send_keys('test')
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[4]').send_keys('12')
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[5]').click()
 
+    def tearDown(self):
+        self.driver.close()

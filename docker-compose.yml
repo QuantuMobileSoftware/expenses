@@ -1,6 +1,7 @@
 db:
   image: postgres:9.6
   environment:
+    - POSTGRES_USER=expenses
     - POSTGRES_PASSWORD=Ahcai9da
   volumes:
     - ./:/web
@@ -15,7 +16,6 @@ django:
   ports:
     - "9000:9000"
   environment:
-    - POSTGRES_PASSWORD=Ahcai9da
     - DJANGO_SETTINGS_MODULE=settings.dev
   command: /bin/bash -c "cd /web && pip install -r requirements.txt && exec invoke run_dev"
 node:
