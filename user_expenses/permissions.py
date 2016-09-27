@@ -18,24 +18,22 @@ class CanManageRecords(permissions.BasePermission):
 
 
 class CanManageUsers(permissions.BasePermission):
-    def has_permission(self, request, view):
+    def has_object_permission(self, request, view, obj):
         user_manager = Group.objects.get(name='user_manager')
         admin = Group.objects.get(name='admin')
-        if admin in request.user.groups.all():
+        if admin in obj.groups.all():
             return True
         elif re.findall(r'/users/\d+/', request.path):
-            if user_manager not in request.user.groups.all():
-                if request.user.id != int(re.findall(r'\d+', request.path)[0]):
+            if user_manager not in obj.groups.all():
+                if obj.id != int(re.findall(r'\d+', request.path)[0]):
                     return False
             if 'groups' in request.data.keys():
-                    group_ids = [el.id for el in request.user.groups.all()]
-                    group_ids.sort()
-                    request.data['groups'].sort()
-                    if request.data['groups'] != group_ids:
+                    group_ids = set([el.id for el in obj.groups.all()])
+                    if set(request.data['groups']) != group_ids:
                         return False
         else:
             if request.method == 'POST':
-                if user_manager not in request.user.groups.all():
+                if user_manager not in obj.groups.all():
                     return False
         return True
 

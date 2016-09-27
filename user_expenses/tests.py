@@ -17,7 +17,7 @@ class ExpensesTests(APITestCase):
 
     def test_find_existing_expense(self):
         response = self.client.get('/api/expenses/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_create_expense(self):
         self.client.force_authenticate(user=self.user)
@@ -28,7 +28,7 @@ class ExpensesTests(APITestCase):
                 "owner": self.admin.id
                 }
         response = self.client.post('/api/expenses/', data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class SeleniumTest(APITestCase):
