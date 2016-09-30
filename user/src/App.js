@@ -306,6 +306,17 @@ var Login = React.createClass({
             },
         });
     },
+    componentDidMount: function () {
+        $.ajax({
+            url: '/api/login/',
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (xhr, status, err) {
+                console.log(xhr);
+            },
+        });
+    },
     handleLogin: function () {
         var data = {username: this.state.username, password: this.state.password};
         $.ajax({
@@ -337,7 +348,7 @@ var Login = React.createClass({
                                onChange={ this.changeUsername }/>
                         <input type="text" className="form-control" placeholder="Password"
                                onChange={ this.changePassword }/>
-                        <input className="btn btn-lg btn-primary btn-block" id="login_input" type="button" value="Sign in"
+                        <input className="btn btn-lg btn-primary btn-block" type="button" value="Sign in"
                                onClick={ this.handleLogin }/>
                     </form>
                 </div>

@@ -34,7 +34,7 @@ class ExpensesTests(APITestCase):
 
 class SeleniumTest(APITestCase):
     def setUp(self):
-        admin = User.objects.create(username='admin', password='ieTh5lie')
+        admin = User.objects.create(username='admin', password='admin')
         admin.save()
         self.admin = admin
         self.driver = webdriver.Chrome()
@@ -55,7 +55,7 @@ class SeleniumTest(APITestCase):
         self.driver.find_element_by_xpath('//*[@id="root"]/div/div[3]/div[2]/div[1]/form/input[2]').send_keys('00:00')
         self.driver.find_element_by_xpath('//*[@id="root"]/div/div[3]/div[2]/div[1]/form/input[3]').send_keys('test')
         self.driver.find_element_by_xpath('//*[@id="root"]/div/div[3]/div[2]/div[1]/form/input[4]').send_keys('12')
-        self.driver.find_elements_by_id('login_input').click()
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[3]/div[2]/div[1]/form/input[5]').click()
         # self.driver.get("http://localhost:9000/api/login")
         # element = WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.ID, 'id_username')))
         # self.driver.find_element_by_id('id_username').send_keys(self.admin.username)
