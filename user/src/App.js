@@ -290,6 +290,7 @@ var Login = React.createClass({
             xhrFields: {
                 withCredentials: true
             },
+            crossDomain: true,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('X-CSRFToken', readCookie('csrftoken'));
             },
@@ -311,6 +312,7 @@ var Login = React.createClass({
             xhrFields: {
                 withCredentials: true
             },
+            crossDomain: true,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('X-CSRFToken', readCookie('csrftoken'));
             },
@@ -335,7 +337,7 @@ var Login = React.createClass({
                                onChange={ this.changeUsername }/>
                         <input type="text" className="form-control" placeholder="Password"
                                onChange={ this.changePassword }/>
-                        <input className="btn btn-lg btn-primary btn-block" type="button" value="Sign in"
+                        <input className="btn btn-lg btn-primary btn-block" id="login_input" type="button" value="Sign in"
                                onClick={ this.handleLogin }/>
                     </form>
                 </div>

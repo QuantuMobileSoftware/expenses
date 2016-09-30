@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
+import os
 
 
 class ExpensesTests(APITestCase):
@@ -39,18 +40,34 @@ class SeleniumTest(APITestCase):
         self.driver = webdriver.Chrome()
 
     def test(self):
-        self.driver.get("http://localhost:9000/api/login")
-        element = WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.ID, 'id_username')))
-        self.driver.find_element_by_id('id_username').send_keys(self.admin.username)
-        self.driver.find_element_by_id('id_password').send_keys(self.admin.password)
-        self.driver.find_element_by_id('submit-id-submit').click()
         self.driver.get("http://localhost:3000")
-        element = WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div[1]')))
-        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[1]').send_keys('01.01.2016')
-        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[2]').send_keys('00:00')
-        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[3]').send_keys('test')
-        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[4]').send_keys('12')
-        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[5]').click()
+        element = WebDriverWait(self.driver, 10).until(
+            expected_conditions.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div[2]/div/div[1]/form/input[1]')))
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div/div[1]/form/input[1]').send_keys(self.admin.username)
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div/div[1]/form/input[2]').send_keys(self.admin.password)
+        # element = self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div/div[1]/form/input[3]').click()
+        WebDriverWait(self.driver, 30).until(expected_conditions.element_to_be_clickable
+                                             ((By.XPATH, '//*[@id="root"]/div/div[2]/div/div[1]/form/input[3]'))).click()
+        element = WebDriverWait(self.driver, 60).until(
+            expected_conditions.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div[1]/h1[text()="Expenses"]')))
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[3]/div[2]/div[1]/form/input[1]').send_keys(
+            '01.01.2016')
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[3]/div[2]/div[1]/form/input[2]').send_keys('00:00')
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[3]/div[2]/div[1]/form/input[3]').send_keys('test')
+        self.driver.find_element_by_xpath('//*[@id="root"]/div/div[3]/div[2]/div[1]/form/input[4]').send_keys('12')
+        self.driver.find_elements_by_id('login_input').click()
+        # self.driver.get("http://localhost:9000/api/login")
+        # element = WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.ID, 'id_username')))
+        # self.driver.find_element_by_id('id_username').send_keys(self.admin.username)
+        # self.driver.find_element_by_id('id_password').send_keys(self.admin.password)
+        # self.driver.find_element_by_id('submit-id-submit').click()
+        # self.driver.get("http://localhost:3000")
+        # element = WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div[1]')))
+        # self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[1]').send_keys('01.01.2016')
+        # self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[2]').send_keys('00:00')
+        # self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[3]').send_keys('test')
+        # self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[4]').send_keys('12')
+        # self.driver.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/div[1]/form/input[5]').click()
 
     def tearDown(self):
         self.driver.close()
